@@ -1,5 +1,3 @@
-import { config, head } from "shelljs";
-
 export type Method = 'get' | 'GET'
   | 'delete' | 'DELETE'
   | 'head' | 'HEAD'
@@ -18,8 +16,8 @@ export interface AxiosRequestConfig {
   timeout?: number
 }
 
-export interface AxiosResponse {
-  data: any
+export interface AxiosResponse<T = any> {
+  data: T
   status: number
   statusText: string
   headers: any
@@ -27,38 +25,43 @@ export interface AxiosResponse {
   request: any
 }
 
-export interface AxiosPromise extends Promise<AxiosResponse> {
-
-}
-
-export interface AxiosError extends Error {
-  config: AxiosRequestConfig
-  code?: string
-  request?: any
-  response?: AxiosResponse
-  isAxiosError: boolean
+export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {
 }
 
 export interface Axios {
-  request(config: AxiosRequestConfig): AxiosPromise
+  request<T = any>(config: AxiosRequestConfig): AxiosPromise<T>
 
-  get(url: string, config?: AxiosRequestConfig): AxiosPromise
+  get<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
 
-  delete(url: string, config?: AxiosRequestConfig): AxiosPromise
+  delete<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
 
-  head(url: string, config?: AxiosRequestConfig): AxiosPromise
+  head<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
 
-  options(url: string, config?: AxiosRequestConfig): AxiosPromise
+  options<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
 
-  post(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise
+  post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
 
-  put(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise
+  put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
 
-  patch(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise
+  patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
 }
 
 export interface AxiosInstance extends Axios {
-  (config: AxiosRequestConfig): AxiosPromise
+  <T = any>(config: AxiosRequestConfig): AxiosPromise<T>
 
-  (url: string, config?: AxiosRequestConfig): AxiosPromise
+  <T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+}
+
+export interface AxiosInterceptorManager<T> {
+  use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
+
+  eject(id: number): void
+}
+
+export interface ResolvedFn<T=any> {
+  (val: T): T | Promise<T>
+}
+
+export interface RejectedFn {
+  (error: any): any
 }
